@@ -1,18 +1,15 @@
-Práctica 2: Empleamos la UART para una comunicación serie, RS232.
+Práctica 3: Empleamos interrupciones en vez de polling para el botón EINT0.
 ===
 
 # Objetivo de la práctica  
 
 + Partiendo de lo hecho en la práctica anterior...
-+ Vamos a empezar a organizarnos el código aún mejor, separamos cabecera con defines, empleamos gitignore, renombramos la aplicación y modificamos Makefile.
-+ Vamos a emplear una conexión UART del micro, que está cableada al COM1. De esta forma tenemos [comunicaciones serie RS232](https://en.wikipedia.org/wiki/RS-232) y podremos comunicarnos mediante paso de mensajes con nuestro sistema microcontrolador.
-+ Tendremos nuestra primera toma de contacto con la velocidad de reloj cara a controlar la velocidad de las comunicaciones.
-+ Cuando pulsemos el botón debemos de poder recibir una cadena de texto informando del evento.
-+ ¿Podemos imprimir el número de la cuenta sin emplear aún librería estándar?
+    - Donde hemos separado la UART en su propio código fuente uart.h/uart.c
+    - Donde hemos mejorado el Makefile para poder hacer un *make flash*
++ Vamos a emplear interrupciones para detectar un flanco de bajada en el botón EINT0.
++ Mediante la UART 1, mandaremos un mensaje de bienvenida con nuestra versión del código (nos lo inventamos, es por aseguraros que ejecutáis lo que queréis realmente), Y mandaremos un mensaje cada vez que incrementemos el contador con el número de cuenta.
 
-+ EXTRA: nos animamos a crearnos rutinas para la configuración de la UART1, así como para escribir caracteres? (separar el código en un uart.c/uart.h)
-+ EXTRA: podríamos integrar la impresión UART como un printf estándar? Qué dificultades tenemos para emplear newlib? [syscalls reference](https://sourceware.org/newlib/libc.html), [newlib porting faq](https://sourceware.org/newlib/faq.html)
-
++ EXTRA: podríamos rizar el rizo y dormir la placa en modo sueño!
 
 # Recordad
 
@@ -48,10 +45,30 @@ Algunas veces la placa falla en programarse, resetearse, etc. Leed el mensaje de
 
 Editad el Makefile si añadís más ficheros de código de fuente o los renombrais.
 
-Para borrar todos los binarios y código objeto:
+### Para flashear mediante el Makefile:
+```
+make flash
+```
+
+Algunas veces la placa falla en programarse, resetearse, etc. Leed el mensaje de vuelta bien y repetid el comando que haya fallado si es necesario.
+
+y recordad el tipo de programador que tenéis, cambiad los comandos según sea el ulink2 o el jlink, en el Makefile:
+
+(si tenéis el programador Keil ulink 2)
+```
+$ openocd -f interface/cmsis-dap.cfg -f mcb2300.cfg [...]
+```
+
+(si tenéis el programador jlink, el de color negro)
+```
+$ openocd -f interface/jlink.cfg -f mcb2300.cfg [...]
+```
+
+### Para borrar todos los binarios y código objeto:
 ```
 make clean
 ```
+
 ## Dependencias nuevas para esta práctica
 
 Necesitaréis instalar un terminal serie, uno clásico que funciona muy bien es minicom:
@@ -70,21 +87,57 @@ minicom -D /dev/ttyUSB0 -b 9600
 
 # Qué vamos a hacer?
 
-Queremos que al pulsar el botón INT0 el contador BCD se incremente y el microcontrolador nos comunique un mensaje por el puerte serie.
+Queremos que al pulsar el botón INT0 el contador BCD se incremente y el microcontrolador nos comunique un mensaje por el puerte serie el valor numérico que tiene.
+
+Queremos además que no sea por **polling** si no por interrupción producida por el la entrada EINT0 que usamos para el botón.
 
 Habrá que:
 
-+ Configurar, en este caso porque es la más fácil, la UART 1, que está conectada al puerto COM 1.
-+ Necesitaremos una comunicación de 9600 baudios y por ahora podemos evitar la partidad, bits de parada, etc.
-+ vamos a crearnos unas pequeñas funciones para automatizar el envío de cadenas de texto.
-+ EXTRA: podemos cambiar la velocidad de transmisión?
-+ EXTRA: podemos plantear printf con su formateo para imprimir cadenas de texto?
-+ EXTRA: podemos plantear una librería a alto nivel para configurar la UART?
++ Partiendo de lo hecho en la práctica anterior...
+    - Donde hemos separado la UART en su propio código fuente uart.h/uart.c
+    - Donde hemos mejorado el Makefile para poder hacer un *make flash*
++ Vamos a emplear interrupciones para detectar un flanco de bajada en el botón EINT0. 
++ Queremos que el contador se incremente sólo cuando se reciba la interrupción del botón.
+Emplearemos los registros:
+```
+// Para indicar que empleamos IRQ para la interrupción EINT0
+VICIntSelect
 
-De manera transversal vamos a:
+// Para habilitar la interrupción EINT0 (esto se debe de hacer ya lo último!)
+VICIntEnable
 
-+ emplear un control de versiones, en éste caso git.
-+ vamos a empezar a facilitarnos la vida separando el código en diversos ficheros de código fuente.
+// para saber si la fuente de una interrupción IRQ es nuestro EINT0, analizaremos este registro
+VICIRQStatus
+
+/// PAra configurar el comportamiento de EINT0:
+// Para que EINT0 detecte flancos y no niveles
+EXTMODE
+
+// Para que EINT0 detecte un flanco descendente
+EXTPOLAR
+
+// Tanto para empezar, tanto cuando procesemos la interrupción.
+// Para limpiar cualquier interrupción pendiente
+EXTINT
+
+```
+
++ Mediante la UART 1, mandaremos un mensaje de bienvenida con nuestra versión del código (nos lo inventamos, es por aseguraros que ejecutáis lo que queréis realmente), Y mandaremos un mensaje cada vez que incrementemos el contador con el número de cuenta.
+
++ EXTRA: podríamos rizar el rizo y dormir la placa en modo sueño, de forma que:
+    - se inicie, habilite interrupciones, uart, mensaje de bienvenida, etc.
+    - mensaje por uart de que nos vamos a modo sueño.
+    - modo sueño.
+    (vemos que la ejecución del while se para y no se incrementa el contador, tampoco recibimos los mensajes de la uart)
+    - pulsamos botón, se produce la interrupción, se saca al microcontrolador del modo sueño.
+    - contamos, imprimimos que nos vamos a dormir y volvemos a entrar en modo sueño.
+    - etc.
+```
+// Se emplea el registro:
+PCON
+// Ojo! en el momento que se modifican sus bits PM2, PM1, y PM0
+// el micro entra en ese modo de energía!
+```
 
 # Licencia
 

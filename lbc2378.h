@@ -50,6 +50,15 @@
 // Line Status, bit 5 = THRE (pág. 441)
 #define U1LSR  (*(volatile uint8_t*) 0xE0010014u)
 
+#define VICIntSelec (*(volatile uint32_t*)  0xFFFFF00Cu)
+#define VICIntEnable (*(volatile uint32_t*) 0xFFFFF010u)
+#define VICIRQStatus (*(volatile uint32_t*) 0xFFFFF000u)  
 
- 
+#define EXTMODE (*(volatile uint8_t*) 0xE01FC148u) 
+#define EXTPOLAR (*(volatile uint8_t*) 0xE01FC14Cu) 
+
+#define EXTINT  (*(volatile uint8_t*) 0xE01FC140u)
+
+#define PCON (*(volatile uint8_t*) 0xE01FC0C0u)
+
 #endif

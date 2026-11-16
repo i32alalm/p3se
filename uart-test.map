@@ -46,7 +46,7 @@ Discarded input sections
  .bss           0x00000000        0x0 uart-test.o
  .debug_macro   0x00000000      0xaa8 uart-test.o
  .debug_macro   0x00000000      0x34e uart-test.o
- .debug_macro   0x00000000       0x8e uart-test.o
+ .debug_macro   0x00000000       0xb8 uart-test.o
  .debug_macro   0x00000000       0x10 uart-test.o
  .comment       0x00000000       0x27 uart-test.o
 
@@ -74,93 +74,98 @@ LOAD uart-test.o
  .vectors       0x00000000       0x20 startup.o
                 0x00000000                _start
 
-.text           0x00000020      0x58c
+.text           0x00000020      0x668
                 0x00000020                        . = ALIGN (0x4)
  *(.text*)
  .text.Reset_Handler
-                0x00000020       0xf8 startup.o
+                0x00000020      0x138 startup.o
                 0x00000020                Reset_Handler
- .text.udiv     0x00000118       0x30 uart.o
- .text.set2     0x00000148       0x1c uart.o
+                0x000000c4                IRQ_Handler
+                0x000000f4                FIQ_Handler
+ .text.udiv     0x00000158       0x30 uart.o
+ .text.set2     0x00000188       0x1c uart.o
  .text.uart_init
-                0x00000164      0x154 uart.o
-                0x00000164                uart_init
+                0x000001a4      0x154 uart.o
+                0x000001a4                uart_init
  .text.uart_config
-                0x000002b8       0x88 uart.o
-                0x000002b8                uart_config
+                0x000002f8       0x88 uart.o
+                0x000002f8                uart_config
  .text.uart_putc
-                0x00000340       0x20 uart.o
-                0x00000340                uart_putc
+                0x00000380       0x20 uart.o
+                0x00000380                uart_putc
  .text.uart_puts
-                0x00000360       0x30 uart.o
-                0x00000360                uart_puts
+                0x000003a0       0x30 uart.o
+                0x000003a0                uart_puts
  .text.uart_print_u8
-                0x00000390       0xf0 uart.o
-                0x00000390                uart_print_u8
- .text.delay    0x00000480       0x3c uart-test.o
+                0x000003d0       0xf0 uart.o
+                0x000003d0                uart_print_u8
  .text.irq_handler_c
-                0x000004bc        0x4 uart-test.o
-                0x000004bc                irq_handler_c
+                0x000004c0       0x30 uart-test.o
+                0x000004c0                irq_handler_c
  .text.fiq_handler_c
-                0x000004c0        0x4 uart-test.o
-                0x000004c0                fiq_handler_c
- .text.main     0x000004c4       0xcc uart-test.o
-                0x000004c4                main
+                0x000004f0        0x4 uart-test.o
+                0x000004f0                fiq_handler_c
+ .text.main     0x000004f4      0x144 uart-test.o
+                0x000004f4                main
  *(.rodata*)
  .rodata.uart_init
-                0x00000590        0x4 uart.o
+                0x00000638        0x4 uart.o
  .rodata.uart_base
-                0x00000594       0x10 uart.o
+                0x0000063c       0x10 uart.o
  .rodata.main.str1.4
-                0x000005a4        0x7 uart-test.o
+                0x0000064c       0x3b uart-test.o
  *(.glue_7)
- .glue_7        0x000005ab        0x0 linker stubs
+ .glue_7        0x00000687        0x0 linker stubs
  *(.glue_7t)
- .glue_7t       0x000005ab        0x0 linker stubs
-                0x000005ac                        . = ALIGN (0x4)
- *fill*         0x000005ab        0x1 
+ .glue_7t       0x00000687        0x0 linker stubs
+                0x00000688                        . = ALIGN (0x4)
+ *fill*         0x00000687        0x1 
 
-.vfp11_veneer   0x000005ac        0x0
- .vfp11_veneer  0x000005ac        0x0 linker stubs
+.vfp11_veneer   0x00000688        0x0
+ .vfp11_veneer  0x00000688        0x0 linker stubs
 
-.v4_bx          0x000005ac        0x0
- .v4_bx         0x000005ac        0x0 linker stubs
+.v4_bx          0x00000688        0x0
+ .v4_bx         0x00000688        0x0 linker stubs
 
-.iplt           0x000005ac        0x0
- .iplt          0x000005ac        0x0 startup.o
+.iplt           0x00000688        0x0
+ .iplt          0x00000688        0x0 startup.o
 
-.rel.dyn        0x000005ac        0x0
- .rel.iplt      0x000005ac        0x0 startup.o
+.rel.dyn        0x00000688        0x0
+ .rel.iplt      0x00000688        0x0 startup.o
 
 .ARM.extab
  *(.ARM.extab* .gnu.linkonce.armextab.*)
 
-.ARM.exidx      0x000005ac        0x0
-                0x000005ac                        __exidx_start = .
+.ARM.exidx      0x00000688        0x0
+                0x00000688                        __exidx_start = .
  *(.ARM.exidx* .gnu.linkonce.armexidx.*)
-                0x000005ac                        __exidx_end = .
+                0x00000688                        __exidx_end = .
 
-.data           0x40000000        0x0 load address 0x000005ac
+.data           0x40000000        0x0 load address 0x00000688
                 0x40000000                        . = ALIGN (0x4)
                 0x40000000                        _sdata = .
  *(.data*)
                 0x40000000                        . = ALIGN (0x4)
                 0x40000000                        _edata = .
-                0x000005ac                        _sidata = LOADADDR (.data)
+                0x00000688                        _sidata = LOADADDR (.data)
 
-.igot.plt       0x40000000        0x0 load address 0x000005ac
+.igot.plt       0x40000000        0x0 load address 0x00000688
  .igot.plt      0x40000000        0x0 startup.o
 
-.bss            0x40000000        0x0 load address 0x000005ac
+.bss            0x40000000        0x4 load address 0x00000688
                 0x40000000                        . = ALIGN (0x4)
                 0x40000000                        _sbss = .
  *(.bss*)
+ .bss.int0_disparar
+                0x40000000        0x1 uart-test.o
+                0x40000000                int0_disparar
  *(COMMON)
-                0x40000000                        . = ALIGN (0x4)
-                0x40000000                        _ebss = .
-                0x40000000                        . = ALIGN (0x8)
-                0x40000000                        _end = .
-                0x40000000                        end = .
+                0x40000004                        . = ALIGN (0x4)
+ *fill*         0x40000001        0x3 
+                0x40000004                        _ebss = .
+                0x40000008                        . = ALIGN (0x8)
+                0x40000008                        _end = .
+                0x40000008                        end = .
                 0x40008000                        _ram_top = (ORIGIN (RAM) + LENGTH (RAM))
                 0x40008000                        _stack_sys_top = _ram_top
                 0x40007800                        _stack_sys_bottom = (_stack_sys_top - STACK_SYS_SIZE)
@@ -175,7 +180,7 @@ LOAD uart-test.o
                 0x40007380                        _stack_und_top = _stack_abt_bottom
                 0x40007300                        _stack_und_bottom = (_stack_und_top - STACK_UND_SIZE)
                 0x40007300                        _stack_limit = _stack_und_bottom
-                0x40000000                        _heap_start = _end
+                0x40000008                        _heap_start = _end
                 0x40007300                        _heap_end = _stack_limit
                 0x00000001                        ASSERT ((_end <= _stack_limit), RAM overflow: .data/.bss collide with stacks)
                 0x00000001                        ASSERT (((_stack_sys_top & 0x7) == 0x0), System stack is not 8-byte aligned)
@@ -197,87 +202,87 @@ LOAD linker stubs
  .ARM.attributes
                 0x0000004a       0x2a uart-test.o
 
-.debug_line     0x00000000      0x6c3
- .debug_line    0x00000000       0xaf startup.o
- .debug_line    0x000000af      0x39e uart.o
- .debug_line    0x0000044d      0x276 uart-test.o
+.debug_line     0x00000000      0x6d6
+ .debug_line    0x00000000       0xae startup.o
+ .debug_line    0x000000ae      0x39e uart.o
+ .debug_line    0x0000044c      0x28a uart-test.o
 
 .debug_line_str
-                0x00000000       0x2f
+                0x00000000       0x38
  .debug_line_str
-                0x00000000       0x2f startup.o
+                0x00000000       0x38 startup.o
 
-.debug_info     0x00000000      0x78e
+.debug_info     0x00000000      0x7a7
  .debug_info    0x00000000       0x31 startup.o
  .debug_info    0x00000031      0x554 uart.o
- .debug_info    0x00000585      0x209 uart-test.o
+ .debug_info    0x00000585      0x222 uart-test.o
 
-.debug_abbrev   0x00000000      0x2d9
+.debug_abbrev   0x00000000      0x2b2
  .debug_abbrev  0x00000000       0x26 startup.o
  .debug_abbrev  0x00000026      0x184 uart.o
- .debug_abbrev  0x000001aa      0x12f uart-test.o
+ .debug_abbrev  0x000001aa      0x108 uart-test.o
 
-.debug_aranges  0x00000000       0xc0
+.debug_aranges  0x00000000       0xb8
  .debug_aranges
                 0x00000000       0x28 startup.o
  .debug_aranges
                 0x00000028       0x60 uart.o
  .debug_aranges
-                0x00000088       0x38 uart-test.o
+                0x00000088       0x30 uart-test.o
 
-.debug_str      0x00000000     0x710f
- .debug_str     0x00000000     0x710f startup.o
-                                 0x4c (size before relaxing)
- .debug_str     0x0000710f        0x0 uart.o
-                               0x3dcc (size before relaxing)
- .debug_str     0x0000710f        0x0 uart-test.o
-                               0x7129 (size before relaxing)
+.debug_str      0x00000000     0x725b
+ .debug_str     0x00000000     0x725b startup.o
+                                 0x55 (size before relaxing)
+ .debug_str     0x0000725b        0x0 uart.o
+                               0x3f10 (size before relaxing)
+ .debug_str     0x0000725b        0x0 uart-test.o
+                               0x7275 (size before relaxing)
 
 .debug_rnglists
-                0x00000000       0x92
+                0x00000000       0x8c
  .debug_rnglists
                 0x00000000       0x1a startup.o
  .debug_rnglists
                 0x0000001a       0x52 uart.o
  .debug_rnglists
-                0x0000006c       0x26 uart-test.o
+                0x0000006c       0x20 uart-test.o
 
 .debug_loclists
-                0x00000000      0x2d4
+                0x00000000      0x2d5
  .debug_loclists
                 0x00000000      0x2a3 uart.o
  .debug_loclists
-                0x000002a3       0x31 uart-test.o
+                0x000002a3       0x32 uart-test.o
 
-.debug_macro    0x00000000     0x1b5c
+.debug_macro    0x00000000     0x1b86
  .debug_macro   0x00000000       0x74 uart.o
  .debug_macro   0x00000074      0xaa8 uart.o
  .debug_macro   0x00000b1c      0x34e uart.o
- .debug_macro   0x00000e6a       0x8e uart.o
- .debug_macro   0x00000ef8       0x10 uart.o
- .debug_macro   0x00000f08      0x127 uart-test.o
- .debug_macro   0x0000102f       0x22 uart-test.o
- .debug_macro   0x00001051       0x60 uart-test.o
- .debug_macro   0x000010b1       0x24 uart-test.o
- .debug_macro   0x000010d5       0x5c uart-test.o
- .debug_macro   0x00001131       0x3c uart-test.o
- .debug_macro   0x0000116d       0x34 uart-test.o
- .debug_macro   0x000011a1       0x16 uart-test.o
- .debug_macro   0x000011b7       0x57 uart-test.o
- .debug_macro   0x0000120e       0x9e uart-test.o
- .debug_macro   0x000012ac      0x364 uart-test.o
- .debug_macro   0x00001610      0x112 uart-test.o
- .debug_macro   0x00001722       0x10 uart-test.o
- .debug_macro   0x00001732       0x16 uart-test.o
- .debug_macro   0x00001748       0x4a uart-test.o
- .debug_macro   0x00001792       0x34 uart-test.o
- .debug_macro   0x000017c6       0x10 uart-test.o
- .debug_macro   0x000017d6       0x52 uart-test.o
- .debug_macro   0x00001828      0x1de uart-test.o
- .debug_macro   0x00001a06       0x16 uart-test.o
- .debug_macro   0x00001a1c       0x16 uart-test.o
- .debug_macro   0x00001a32      0x12a uart-test.o
+ .debug_macro   0x00000e6a       0xb8 uart.o
+ .debug_macro   0x00000f22       0x10 uart.o
+ .debug_macro   0x00000f32      0x127 uart-test.o
+ .debug_macro   0x00001059       0x22 uart-test.o
+ .debug_macro   0x0000107b       0x60 uart-test.o
+ .debug_macro   0x000010db       0x24 uart-test.o
+ .debug_macro   0x000010ff       0x5c uart-test.o
+ .debug_macro   0x0000115b       0x3c uart-test.o
+ .debug_macro   0x00001197       0x34 uart-test.o
+ .debug_macro   0x000011cb       0x16 uart-test.o
+ .debug_macro   0x000011e1       0x57 uart-test.o
+ .debug_macro   0x00001238       0x9e uart-test.o
+ .debug_macro   0x000012d6      0x364 uart-test.o
+ .debug_macro   0x0000163a      0x112 uart-test.o
+ .debug_macro   0x0000174c       0x10 uart-test.o
+ .debug_macro   0x0000175c       0x16 uart-test.o
+ .debug_macro   0x00001772       0x4a uart-test.o
+ .debug_macro   0x000017bc       0x34 uart-test.o
+ .debug_macro   0x000017f0       0x10 uart-test.o
+ .debug_macro   0x00001800       0x52 uart-test.o
+ .debug_macro   0x00001852      0x1de uart-test.o
+ .debug_macro   0x00001a30       0x16 uart-test.o
+ .debug_macro   0x00001a46       0x16 uart-test.o
+ .debug_macro   0x00001a5c      0x12a uart-test.o
 
-.debug_frame    0x00000000      0x154
+.debug_frame    0x00000000      0x13c
  .debug_frame   0x00000000       0xf0 uart.o
- .debug_frame   0x000000f0       0x64 uart-test.o
+ .debug_frame   0x000000f0       0x4c uart-test.o
